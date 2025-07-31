@@ -1,12 +1,13 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link as MuiLink, IconButton, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { Box, Container, Grid, Typography, Link as MuiLink, IconButton, List, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material';
 import { Link } from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
-import logo from '@/photos/logo.png'; // Logoyu import ediyoruz
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import logo from '@/photos/logo.png';
 
 // Başlıklar için ortak stil
 const FooterTitle = ({ children }) => (
@@ -48,20 +49,40 @@ function Footer() {
         <Grid container spacing={5}>
           {/* Sütun 1: İletişim */}
           <Grid item xs={12} md={3}>
-            {/* GÜNCELLENDİ: Logoyu dikey olarak hizalamak için marginTop eklendi */}
-            <img src={logo} alt="Logo" style={{ height: '50px', marginBottom: '16px', marginTop: '8px' }} />
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Halk Sokak No:17/2 Yenişehir Çankaya Ankara
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <PhoneIcon fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body2">0.312.434 1412</Typography>
-            </Box>
-             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <EmailIcon fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body2">kibristkd@gmail.com</Typography>
-            </Box>
-            <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>Sosyal Hesaplar</Typography>
+            <img src={logo} alt="Logo" style={{ height: '50px', marginBottom: '24px', marginTop: '10px' }} />
+            
+            {/* GÜNCELLENDİ: İletişim bilgileri daha modern bir liste yapısıyla sunuldu */}
+            <List disablePadding>
+                <ListItem disablePadding sx={{ mb: 2 }}>
+                    <ListItemIcon sx={{ minWidth: '40px', color: 'primary.main' }}>
+                        <LocationOnIcon />
+                    </ListItemIcon>
+                    <ListItemText 
+                        primary="Halk Sokak No:17/2 Yenişehir Çankaya Ankara" 
+                        primaryTypographyProps={{ variant: 'body1', color: 'grey.300' }} 
+                    />
+                </ListItem>
+                <ListItem disablePadding sx={{ mb: 2 }}>
+                    <ListItemIcon sx={{ minWidth: '40px', color: 'primary.main' }}>
+                        <PhoneIcon />
+                    </ListItemIcon>
+                    <ListItemText 
+                        primary="0 (312) 434 14 12" 
+                        primaryTypographyProps={{ variant: 'body1', color: 'grey.300' }} 
+                    />
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemIcon sx={{ minWidth: '40px', color: 'primary.main' }}>
+                        <EmailIcon />
+                    </ListItemIcon>
+                    <ListItemText 
+                        primary="kibristkd@gmail.com" 
+                        primaryTypographyProps={{ variant: 'body1', color: 'grey.300' }} 
+                    />
+                </ListItem>
+            </List>
+
+            <Typography variant="h6" fontWeight="bold" sx={{ mb: 1, mt: 3 }}>Sosyal Hesaplar</Typography>
             <Box>
               <IconButton sx={{ color: 'white', bgcolor: '#3b5998', mr: 1, '&:hover': { bgcolor: '#2d4373' } }}><FacebookIcon /></IconButton>
               <IconButton sx={{ color: 'white', bgcolor: '#1DA1F2', mr: 1, '&:hover': { bgcolor: '#0c85d0' } }}><TwitterIcon /></IconButton>
