@@ -1,20 +1,18 @@
 import React from 'react';
-import { Box, Typography, TextField, IconButton, List, ListItem, ListItemText, Divider, Avatar } from '@mui/material';
+import { Box, Typography, TextField, IconButton, List, ListItem, ListItemText, Divider, Avatar, Paper } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Yazarlar için ikon
 
 // Başlıklar için ortak stil
 const SectionTitle = ({ children }) => (
   <Typography
-    variant="body2"
+    variant="h6"
     component="h2"
     sx={{
-      display: 'inline-block',
-      backgroundColor: 'primary.main',
-      color: 'white',
-      px: 2,
-      py: 0.5,
-      mb: 2,
       fontWeight: 'bold',
+      mb: 2,
+      pb: 1,
+      borderBottom: '1px solid #ddd'
     }}
   >
     {children}
@@ -28,23 +26,22 @@ const announcements = [
 ];
 
 const columnists = [
-    { name: 'İsmail Bozkurt', avatar: '/path/to/avatar1.jpg' },
-    { name: 'Prof. Dr. Ata Atun', avatar: '/path/to/avatar2.jpg' },
+    { name: 'İsmail Bozkurt', path: '/yazarlar/ismail-bozkurt' },
+    { name: 'Prof. Dr. Ata Atun', path: '/yazarlar/ata-atun' },
+    { name: 'Hüseyin Laptalı', path: '/yazarlar/huseyin-laptali' },
 ];
 
 function Sidebar() {
   return (
-    <Box>
+    <Box component={Paper} elevation={0} variant="outlined" sx={{ p: 3 }}>
       {/* Site İçi Arama */}
-      <Box sx={{ mb: 4, p: 2, border: '1px dashed #ccc' }}>
-        <Typography variant="h6" sx={{ mb: 1, borderBottom: '1px solid #eee', pb: 1 }}>
-          Site İçi Arama
-        </Typography>
+      <Box sx={{ mb: 4 }}>
+        <SectionTitle>Site İçi Arama</SectionTitle>
         <Box component="form" sx={{ display: 'flex', alignItems: 'center' }}>
           <TextField
             variant="outlined"
             size="small"
-            placeholder="Aradığınız kelime"
+            placeholder="Aradığınız kelime..."
             fullWidth
             sx={{ mr: 1 }}
           />
@@ -60,10 +57,10 @@ function Sidebar() {
         <List disablePadding>
           {announcements.map((item, index) => (
             <React.Fragment key={index}>
-              <ListItem alignItems="flex-start" sx={{px: 0}}>
+              <ListItem alignItems="flex-start" sx={{px: 0, py: 1.5}}>
                 <ListItemText
                   primary={
-                    <Typography component="span" variant="body1" color="text.primary" fontWeight="bold">
+                    <Typography component="span" variant="body1" color="text.primary" fontWeight="medium">
                       {item.title}
                     </Typography>
                   }
@@ -82,8 +79,10 @@ function Sidebar() {
         <List disablePadding>
           {columnists.map((item, index) => (
              <React.Fragment key={index}>
-                <ListItem alignItems="center" sx={{px: 0}}>
-                    <Avatar alt={item.name} src={item.avatar} sx={{ mr: 2 }} />
+                <ListItem button component="a" href={item.path} alignItems="center" sx={{px: 0, py: 1.5}}>
+                    <Avatar sx={{ mr: 2, bgcolor: 'grey.300' }}>
+                        <AccountCircleIcon color="action" />
+                    </Avatar>
                     <ListItemText primary={item.name} />
                 </ListItem>
                 {index < columnists.length - 1 && <Divider component="li" />}

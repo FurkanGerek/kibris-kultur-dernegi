@@ -1,157 +1,231 @@
-import React from 'react';
-import { Box, Container, Grid, Typography, Link as MuiLink, Card, CardMedia, CardContent } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Grid, Typography, Link as MuiLink, IconButton, Paper, styled, List, ListItem, ListItemText, ListItemAvatar, Avatar, TextField, Card, CardMedia, CardContent, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
-import HeroSlider from '@/components/HeroSlider';
-import MainContentSlider from '@/components/MainContentSlider';
-import Sidebar from '@/components/Sidebar';
+import Slider from 'react-slick';
+import SearchIcon from '@mui/icons-material/Search';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-// Resimleri import ediyoruz
-import slideImage1 from '@/photos/slide1.jpg';
+// Bütün verileri tek bir yerden alıyoruz
+import { fullScreenSlides, newsSliderItems, pressLinks, conflictLinks, columnists, sidebarAnnouncements, sidebarBook, recommendations, cultureItems, books } from '../data/mockData';
 
-// Başlıklar için ortak stil component'i
-const SectionTitle = ({ children }) => (
-  <Typography
-    variant="body2"
-    component="h2"
-    sx={{
-      display: 'inline-block',
-      backgroundColor: 'primary.main',
-      color: 'white',
-      px: 2,
-      py: 0.5,
-      mb: 2,
-      fontWeight: 'bold',
-    }}
-  >
-    {children}
-  </Typography>
-);
+// --- STİL BİLEŞENLERİ ---
 
-// Örnek veriler
-const basindaKktcData = [
-  { text: 'BASIN AÇIKLAMASI', subtext: 'BASIN AÇIKLAMASI', path: '/basin/aciklama-1' },
-  { text: '“İSİAS ORTAK DAVAMIZ”', subtext: '“İSİAS ORTAK DAVAMIZ”', path: '/basin/isias-davamiz' },
-  { text: '8 AĞUSTOS ERENKÖY DİRENİŞİNİN 59. YIL DÖNÜMÜNÜ ONURLA ANIYORUZ', subtext: '8 AĞUSTOS ERENKÖY DİRENİŞİNİN 59. YIL DÖNÜMÜNÜ ONURLA ANIYORUZ', path: '/basin/erenkoy-direnisi' },
-  { text: 'KIBRIS TÜRK HALKININ TOPLUMSAL DİRENİŞ BAYRAMI KUTLU OLSUN', subtext: 'KIBRIS TÜRK HALKININ TOPLUMSAL DİRENİŞ BAYRAMI KUTLU OLSUN', path: '/basin/direnis-bayrami' },
-];
+const SectionHeader = styled(Box)(({ theme }) => ({
+  backgroundColor: '#D32F2F',
+  color: theme.palette.common.white,
+  padding: theme.spacing(0.5, 2),
+  marginBottom: theme.spacing(2),
+  display: 'inline-block',
+}));
 
-const uyusmazlikData = [
-    { text: 'Türk Ve Rum Müzakere Stratejileri Karşılaştırıldığında', subtext: '2018-04-21, M. Ergün Olgun', path: '/kibris/turk-rum-muzakere' },
-    { text: 'Besparmak Düşünce Grubu Değerlendirmesi', subtext: '2017-12-15', path: '/kibris/besparmak-degerlendirmesi' },
-];
+const SidebarBox = styled(Box)(({ theme }) => ({
+  border: '1px dashed #ccc',
+  padding: theme.spacing(2),
+  marginBottom: theme.spacing(4),
+}));
 
-const kulturData = [
-    { title: 'Kıbrıs Ninnileri', image: slideImage1, path: '/kibris/kultur/ninniler' },
-    { title: 'Kıbrıs Türküleri', image: slideImage1, path: '/kibris/kultur/turkuler' },
-    { title: 'Şairlerimizden Şiirler', image: slideImage1, path: '/kibris/kultur/siirler' },
-    { title: 'Kıbrıs Şivesi', image: slideImage1, path: '/kibris/kultur/sive' },
-];
 
+// --- BÜYÜK SLIDER (EN ÜSTTEKİ) İÇİN BİLEŞENLER ---
+
+const TopSliderContainer = styled(Box)({
+  position: 'relative', width: '100%', height: '80vh', overflow: 'hidden',
+});
+
+const TopSliderTrack = styled(Box)(({ activeIndex }) => ({
+  display: 'flex', height: '100%', transform: `translateX(-${activeIndex * 100}%)`,
+  transition: 'transform 1s cubic-bezier(0.86, 0, 0.07, 1)',
+}));
+
+const TopSlideItem = styled(Box)(({ image }) => ({
+  position: 'relative', minWidth: '100%', height: '100%',
+  backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center',
+  '&::after': {
+    content: '""', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  }
+}));
+
+const TopTextContainer = styled(Box)(({ theme, active }) => ({
+    position: 'relative', zIndex: 2, height: '100%', display: 'flex',
+    flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+    textAlign: 'left', color: 'white', paddingLeft: theme.spacing(20), paddingRight: theme.spacing(10),
+    [theme.breakpoints.down('md')]: { paddingLeft: theme.spacing(6), paddingRight: theme.spacing(6) },
+    opacity: active ? 1 : 0, transform: active ? 'translateY(0)' : 'translateY(20px)',
+    transition: 'opacity 0.8s ease-out 0.6s, transform 0.8s ease-out 0.6s',
+}));
+
+const MainText = styled(Typography)(({ theme }) => ({
+  fontWeight: 900, fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+  textShadow: '2px 2px 8px rgba(0, 0, 0, 0.6)', textTransform: 'uppercase',
+}));
+
+const SupplementaryTextContainer = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.error.main, color: theme.palette.common.white,
+    padding: theme.spacing(1.5, 4), marginTop: theme.spacing(2), display: 'inline-block',
+}));
+
+const SupplementaryText = styled(Typography)(({ theme }) => ({
+    fontWeight: 'bold', fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+    textTransform: 'uppercase', letterSpacing: '1px',
+}));
+
+const ArrowButton = styled(IconButton)(({ theme }) => ({
+  position: 'absolute', top: '50%', transform: 'translateY(-50%)', zIndex: 10,
+  color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.2)', width: 50, height: 50,
+  transition: 'background-color 0.3s ease', '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.4)' },
+  '&.left': { left: theme.spacing(3) }, '&.right': { right: theme.spacing(3) },
+}));
+
+// --- İÇERİK SLIDER'I (HABERLER) İÇİN AYARLAR ---
+const newsSliderSettings = {
+  dots: true, infinite: true, speed: 500,
+  slidesToShow: 1, slidesToScroll: 1, autoplay: true, arrows: true,
+};
+
+// --- ANA SAYFA BİLEŞENİ ---
 function HomePage() {
+  const [topSliderIndex, setTopSliderIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTopSliderIndex((current) => (current + 1) % fullScreenSlides.length);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [topSliderIndex]);
+
+  const goToNextTopSlide = () => setTopSliderIndex((prev) => (prev + 1) % fullScreenSlides.length);
+  const goToPrevTopSlide = () => setTopSliderIndex((prev) => (prev - 1 + fullScreenSlides.length) % fullScreenSlides.length);
+
   return (
-    <Box>
-      <HeroSlider />
+    <>
+      {/* === BÖLÜM 1: BÜYÜK MODERN SLIDER (SİLİNMEDİ, BURADA) === */}
+      <TopSliderContainer>
+        <TopSliderTrack activeIndex={topSliderIndex}>
+          {fullScreenSlides.map((slide, index) => (
+            <TopSlideItem key={index} image={slide.image}>
+              <TopTextContainer active={index === topSliderIndex}>
+                <MainText>{slide.mainText}</MainText>
+                <SupplementaryTextContainer>
+                    <SupplementaryText>{slide.supplementaryText}</SupplementaryText>
+                </SupplementaryTextContainer>
+              </TopTextContainer>
+            </TopSlideItem>
+          ))}
+        </TopSliderTrack>
+        <ArrowButton className="left" onClick={goToPrevTopSlide}><NavigateBeforeIcon fontSize="large" /></ArrowButton>
+        <ArrowButton className="right" onClick={goToNextTopSlide}><NavigateNextIcon fontSize="large" /></ArrowButton>
+      </TopSliderContainer>
 
-      <Container sx={{ py: 4 }} maxWidth="lg">
+      {/* === BÖLÜM 2: GÖRSELDEKİ GİBİ KOMPAKT İÇERİK ALANI === */}
+      <Container sx={{ mt: 4 }}>
         <Grid container spacing={4}>
-          {/* Sol Sütun */}
+
+          {/* === SOL SÜTUN === */}
           <Grid item xs={12} md={8}>
-            <MainContentSlider />
-
-            {/* Basında KKTC Bölümü */}
-            <Box sx={{ mt: 4 }}>
-              <SectionTitle>Basında KKTC</SectionTitle>
-              <Grid container spacing={2}>
-                {basindaKktcData.map((item, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <MuiLink component={Link} to={item.path} underline="hover" color="inherit">
-                      <Typography variant="body1">{item.text}</Typography>
-                    </MuiLink>
-                    <Typography variant="caption" color="text.secondary">{item.subtext}</Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-
-            {/* Kıbrıs Uyuşmazlığı Bölümü */}
-            <Box sx={{ mt: 4 }}>
-              <SectionTitle>Kıbrıs Uyuşmazlığı</SectionTitle>
-               <Grid container spacing={2}>
-                {uyusmazlikData.map((item, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <MuiLink component={Link} to={item.path} underline="hover" color="inherit">
-                      <Typography variant="body1">{item.text}</Typography>
-                    </MuiLink>
-                    <Typography variant="caption" color="text.secondary">{item.subtext}</Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-
-            {/* Etkinlikler Bölümü */}
-            <Box sx={{ mt: 4 }}>
-                <SectionTitle>Etkinlikler</SectionTitle>
-                <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid #eee', p: 2 }}>
-                    <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, textAlign: 'center', mr: 2 }}>
-                        <Typography variant="h4" fontWeight="bold">31</Typography>
-                        <Typography variant="body1">JUL</Typography>
-                    </Box>
-                    <Typography variant="h6">Yaklaşan Etkinlik Bulunmamaktadır</Typography>
-                </Box>
-            </Box>
-
-            {/* Tavsiyeler ve Yemekler Bölümü */}
-            <Grid container spacing={4} sx={{ mt: 0 }}>
-                <Grid item xs={12} sm={6}>
-                    <SectionTitle>Kıbrısla İlgili Tavsiyeler</SectionTitle>
-                    <Card>
-                        <CardMedia component="img" height="180" image={slideImage1} alt="Ercan Havalimanı" />
-                        <CardContent>
-                            <Typography variant="body2" color="text.secondary">
-                                Kıbrıs'ta ne yapılır, Kıbrıs'ta nerelere gidilir, Kıbrıs'ta alışveriş yaparken pazarlık varmıdır.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <SectionTitle>Kıbrıs Yemekleri</SectionTitle>
-                     <Card>
-                        <CardMedia component="img" height="180" image={slideImage1} alt="Kıbrıs Yemekleri" />
-                        <CardContent>
-                            <Typography variant="body2" color="text.secondary">
-                                Eğer Kıbrıslıysanız ya da yolunuz bir süreliğine Kıbrıs'a düşmüşse kendinizi mümkün olduğunca şanslı hissedebilirsiniz.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-
-            {/* Kıbrıs Türk Kültürü Bölümü */}
-            <Box sx={{ mt: 4 }}>
-                <SectionTitle>Kıbrıs Türk Kültürü</SectionTitle>
-                <Grid container spacing={2}>
-                    {kulturData.map((item) => (
-                        <Grid item xs={12} sm={6} md={3} key={item.title}>
-                            <Card>
-                                <CardMedia component="img" height="120" image={item.image} alt={item.title} />
-                                <CardContent sx={{ textAlign: 'center' }}>
-                                    <Typography variant="body1">{item.title}</Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+            <Box mb={5}>
+              <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Haberler</Typography></SectionHeader>
+              <Paper variant="outlined" sx={{ p: 0.5 }}>
+                <Slider {...newsSliderSettings}>
+                    {newsSliderItems.map((haber, index) => (
+                        <Box key={index} component={Link} to={haber.path}>
+                            <img src={haber.image} alt="" style={{ width: '100%', display: 'block' }} />
+                        </Box>
                     ))}
-                </Grid>
+                </Slider>
+              </Paper>
             </Box>
-
+            <Box mb={5}>
+              <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Basında KKTC</Typography></SectionHeader>
+              <List sx={{ p: 0 }}>
+                {pressLinks.map((item, index) => (
+                  <ListItem key={index} divider sx={{ flexDirection: 'column', alignItems: 'flex-start', px: 0, py: 1.5 }}>
+                    <MuiLink component={Link} to="#" color="inherit" underline="hover"><Typography variant="body1" sx={{ fontWeight: 'bold' }}>{item.title}</Typography></MuiLink>
+                    <Typography variant="body2" color="text.secondary">{item.subtitle}</Typography>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+            <Box mb={5}>
+              <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Kıbrıs Uyuşmazlığı</Typography></SectionHeader>
+              <Grid container spacing={3}>
+                {conflictLinks.map((item, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <MuiLink component={Link} to="#" color="inherit" underline="hover"><Typography variant="body1">{item.title}</Typography></MuiLink>
+                    <Typography variant="caption" color="text.secondary">{item.date}</Typography>
+                    <Divider sx={{ mt: 1.5 }} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+            <Box mb={5}>
+              <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Etkinlikler</Typography></SectionHeader>
+              <Box sx={{ display: 'flex', alignItems: 'center', p: 2, border: '1px solid #eee' }}>
+                <Box sx={{ bgcolor: '#333', color: 'white', p: 2, textAlign: 'center', mr: 2 }}>
+                  <Typography variant="h4" fontWeight="bold">03</Typography>
+                  <Typography variant="body1">AUG</Typography>
+                </Box>
+                <Typography variant="h6">Yaklaşan Etkinlik Bulunmamaktadır</Typography>
+              </Box>
+            </Box>
+            <Grid container spacing={4} mb={5}>
+                {recommendations.map((item, index) => (
+                    <Grid item xs={12} sm={6} key={index}>
+                        <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>{item.title}</Typography></SectionHeader>
+                        <Card variant="outlined" sx={{ boxShadow: 'none' }}>
+                            <CardMedia component="img" height="180" image={item.image} alt={item.title} />
+                            <CardContent><Typography variant="body2" color="text.secondary">{item.description}</Typography></CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+            <Box>
+              <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Kıbrıs Türk Kültürü</Typography></SectionHeader>
+              <Grid container spacing={2}>
+                {cultureItems.map(item => (
+                  <Grid item xs={6} sm={3} key={item.title}>
+                    <Card variant="outlined" sx={{ textAlign: 'center', boxShadow: 'none' }}>
+                      <CardMedia component="img" height="120" image={item.image} alt={item.title} />
+                      <CardContent sx={{ p: 1 }}><Typography variant="body2">{item.title}</Typography></CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
           </Grid>
 
-          {/* Sağ Sütun: Kenar Çubuğu */}
+          {/* === SAĞ SÜTUN === */}
           <Grid item xs={12} md={4}>
-            <Sidebar />
+            <SidebarBox>
+              <SectionHeader><Typography variant="body2" component="h3" sx={{ fontWeight: 'bold' }}>Site İçi Arama</Typography></SectionHeader>
+              <Box component="form" sx={{ display: 'flex' }}><TextField fullWidth variant="outlined" size="small" placeholder="Aradığınız Kelime" /><IconButton type="submit" sx={{ ml: 0.5 }}><SearchIcon /></IconButton></Box>
+            </SidebarBox>
+            <SidebarBox>
+              <SectionHeader><Typography variant="body2" component="h3" sx={{ fontWeight: 'bold' }}>Duyurular</Typography></SectionHeader>
+              <MuiLink component={Link} to={sidebarAnnouncements.path} underline="none">
+                <img src={sidebarAnnouncements.image} alt={sidebarAnnouncements.title} style={{ width: '100%', marginBottom: '8px' }} />
+                <Typography variant="body1" color="text.primary" sx={{ fontWeight: 'bold' }}>{sidebarAnnouncements.title}</Typography>
+              </MuiLink>
+            </SidebarBox>
+            <SidebarBox>
+              <SectionHeader><Typography variant="body2" component="h3" sx={{ fontWeight: 'bold' }}>Köşe Yazarları</Typography></SectionHeader>
+              <List sx={{ p: 0 }}>
+                {columnists.map((author, index) => (
+                  <ListItem key={index} divider sx={{ alignItems: 'center', px: 0, py: 1 }}>
+                    <ListItemAvatar><MuiLink component={Link} to={author.path}><Avatar alt={author.name} src={author.avatar} sx={{ width: 50, height: 50 }} /></MuiLink></ListItemAvatar>
+                    <ListItemText primary={<MuiLink component={Link} to={author.path} color="inherit" underline="hover"><Typography variant="body1" fontWeight="bold">{author.name}</Typography></MuiLink>} />
+                  </ListItem>
+                ))}
+              </List>
+            </SidebarBox>
+            <SidebarBox>
+              <SectionHeader><Typography variant="body2" component="h3" sx={{ fontWeight: 'bold' }}>Kitap Tanıtımı</Typography></SectionHeader>
+              <MuiLink component={Link} to={sidebarBook.path} underline="none"><img src={sidebarBook.image} alt="" style={{ width: '100%' }} /></MuiLink>
+            </SidebarBox>
           </Grid>
         </Grid>
       </Container>
-    </Box>
+    </>
   );
 }
 

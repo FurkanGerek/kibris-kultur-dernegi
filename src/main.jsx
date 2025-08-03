@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
 import App from './App.jsx';
 import HomePage from './pages/HomePage.jsx';
 
@@ -9,10 +11,7 @@ import HomePage from './pages/HomePage.jsx';
 // Bunu src/pages/PlaceholderPage.jsx olarak kaydetmiştik.
 import PlaceholderPage from './pages/PlaceholderPage.jsx';
 
-const theme = createTheme({
-  palette: { primary: { main: '#D32F2F' } },
-  typography: { button: { textTransform: 'none' } }
-});
+// ...existing code...
 
 const router = createBrowserRouter([
   {
