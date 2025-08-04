@@ -1,12 +1,11 @@
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,17 +14,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -42,7 +35,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #f9f9f9;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -52,147 +45,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-/* Navbar ve Dropdown Menü Stilleri */
-nav {
-  padding: 50px;
-  text-align: center;
-}
-
-nav > ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: inline-block;
-  background: #ddd;
-  border-radius: 5px;
-}
-
-nav > ul > li {
-  float: left;
-  width: 150px;
-  height: 65px;
-  line-height: 65px;
-  position: relative;
-  text-transform: uppercase;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.7);
-  cursor: pointer;
-}
-
-nav > ul > li:hover {
-  background: #d5d5d5;
-}
-
-ul.drop-menu {
-  position: absolute;
-  top: 100%;
-  left: 0%;
-  width: 100%;
-  padding: 0;
-}
-
-ul.drop-menu li {
-  background: #666;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-ul.drop-menu li:hover {
-  background: #606060;
-}
-
-ul.drop-menu li:last-child {
-  border-radius: 0px 0px 5px 5px;
-}
-
-/* Style 2 Animasyonu (Güncellenmiş) */
-li:hover > ul.drop-menu.menu-2 {
-  perspective: 1000px;
-}
-
-li:hover > ul.drop-menu.menu-2 li {
-  opacity: 0;
-  transform-origin: top center;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(1) {
-  animation: menu2 300ms ease-in-out -170ms forwards;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(2) {
-  animation: menu2 300ms ease-in-out 0ms forwards;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(3) {
-  animation: menu2 300ms ease-in-out 130ms forwards;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(4) {
-  animation: menu2 300ms ease-in-out 260ms forwards;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(5) {
-  animation: menu2 300ms ease-in-out 390ms forwards;
-}
-
-li:hover > ul.drop-menu.menu-2 li:nth-child(6) {
-  animation: menu2 300ms ease-in-out 520ms forwards;
-}
-
-@keyframes menu2 {
-  0% {
-    opacity: 0;
-    transform: rotateX(-90deg);
-  }
-  100% {
-    opacity: 1;
-    transform: rotateX(0deg);
-  }
-}
-
-/* Yeni Dropdown Stili */
-.DropdownMenu {
-  position: relative;
-}
-
-.DropdownMenu-content {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 200px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  zIndex: 1000;
-  perspective: 1000px;
-}
-
-.DropdownMenu-content button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 8px 16px;
-  color: #333;
-  background: white;
-  border: none;
-  cursor: pointer;
-}
-
-.DropdownMenu-content button:hover {
-  background: #ff0000;
-  color: white;
 }

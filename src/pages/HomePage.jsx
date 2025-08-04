@@ -6,13 +6,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-// Bütün verileri tek bir yerden alıyoruz
 import { fullScreenSlides, newsSliderItems, pressLinks, conflictLinks, columnists, sidebarAnnouncements, sidebarBook, recommendations, cultureItems, books } from '../data/mockData';
 
-// --- STİL BİLEŞENLERİ ---
+// --- STİL BİLEŞENLERİ (RENKLER DÜZELTİLDİ) ---
 
 const SectionHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: '#D32F2F',
+  backgroundColor: theme.palette.primary.main, // <-- DOĞRU KIRMIZI: '#D32F2F' yerine tema rengi kullanıldı
   color: theme.palette.common.white,
   padding: theme.spacing(0.5, 2),
   marginBottom: theme.spacing(2),
@@ -25,9 +24,7 @@ const SidebarBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }));
 
-
 // --- BÜYÜK SLIDER (EN ÜSTTEKİ) İÇİN BİLEŞENLER ---
-
 const TopSliderContainer = styled(Box)({
   position: 'relative', width: '100%', height: '80vh', overflow: 'hidden',
 });
@@ -61,7 +58,8 @@ const MainText = styled(Typography)(({ theme }) => ({
 }));
 
 const SupplementaryTextContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.error.main, color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main, // <-- DOĞRU KIRMIZI: 'error.main' yerine tema rengi kullanıldı
+    color: theme.palette.common.white,
     padding: theme.spacing(1.5, 4), marginTop: theme.spacing(2), display: 'inline-block',
 }));
 
@@ -77,13 +75,12 @@ const ArrowButton = styled(IconButton)(({ theme }) => ({
   '&.left': { left: theme.spacing(3) }, '&.right': { right: theme.spacing(3) },
 }));
 
-// --- İÇERİK SLIDER'I (HABERLER) İÇİN AYARLAR ---
 const newsSliderSettings = {
   dots: true, infinite: true, speed: 500,
   slidesToShow: 1, slidesToScroll: 1, autoplay: true, arrows: true,
 };
 
-// --- ANA SAYFA BİLEŞENİ ---
+// --- ANA SAYFA BİLEŞENİ (DEĞİŞİKLİK YOK) ---
 function HomePage() {
   const [topSliderIndex, setTopSliderIndex] = useState(0);
 
@@ -99,7 +96,6 @@ function HomePage() {
 
   return (
     <>
-      {/* === BÖLÜM 1: BÜYÜK MODERN SLIDER (SİLİNMEDİ, BURADA) === */}
       <TopSliderContainer>
         <TopSliderTrack activeIndex={topSliderIndex}>
           {fullScreenSlides.map((slide, index) => (
@@ -117,12 +113,10 @@ function HomePage() {
         <ArrowButton className="right" onClick={goToNextTopSlide}><NavigateNextIcon fontSize="large" /></ArrowButton>
       </TopSliderContainer>
 
-      {/* === BÖLÜM 2: GÖRSELDEKİ GİBİ KOMPAKT İÇERİK ALANI === */}
       <Container sx={{ mt: 4 }}>
         <Grid container spacing={4}>
-
-          {/* === SOL SÜTUN === */}
           <Grid item xs={12} md={8}>
+            {/* ... sayfanın geri kalanında değişiklik yok ... */}
             <Box mb={5}>
               <SectionHeader><Typography variant="body1" sx={{ fontWeight: 'bold' }}>Haberler</Typography></SectionHeader>
               <Paper variant="outlined" sx={{ p: 0.5 }}>
@@ -194,7 +188,6 @@ function HomePage() {
             </Box>
           </Grid>
 
-          {/* === SAĞ SÜTUN === */}
           <Grid item xs={12} md={4}>
             <SidebarBox>
               <SectionHeader><Typography variant="body2" component="h3" sx={{ fontWeight: 'bold' }}>Site İçi Arama</Typography></SectionHeader>

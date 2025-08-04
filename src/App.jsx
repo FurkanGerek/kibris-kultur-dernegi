@@ -1,14 +1,11 @@
 import React from 'react';
-import HomePage from './pages/HomePage'; 
-import { Outlet, Routes, Route } from 'react-router-dom';
-import AdminLayout from './admin/AdminLayout';
-import AdminDashboard from './admin/pages/AdminDashboard';
-import ArticleList from './admin/pages/ArticleList';
+import { Outlet } from 'react-router-dom'; // Routes ve Route importları kaldırıldı
 import { Box, Fab, Fade, useScrollTrigger, Container, Typography } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
+// ScrollTop fonksiyonu aynı kalıyor
 function ScrollTop(props) {
   const { children } = props;
   const trigger = useScrollTrigger({
@@ -42,20 +39,15 @@ function ScrollTop(props) {
   );
 }
 
+// ANA APP BİLEŞENİ GÜNCELLENDİ
 function App() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Box id="back-to-top-anchor" />
       <Navbar />
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          
-          <Route path="/girne" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="makaleler" element={<ArticleList />} />
-          </Route>
-        </Routes>
+      <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default' }}>
+        {/* main.jsx'teki yönlendiricinin çocukları burada gösterilecek */}
+        <Outlet />
       </Box>
       <Footer />
       <Box sx={{ bgcolor: '#1e1e1e', color: 'grey.500', py: 2 }}>

@@ -1,13 +1,21 @@
-// ... (dosyanın üst kısmı aynı)
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Box, TextField, Button, Typography, Paper } from '@mui/material';
+
+// Bu component, 'title' adında bir prop alarak sayfa başlığını dinamik olarak yazar.
+function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
 
     try {
-      // DEĞİŞİKLİK BURADA: 'http://localhost:3001' kısmını siliyoruz.
-      // Sadece '/api/login' yazarak, isteğin kendi bulunduğu domain'e gitmesini sağlıyoruz.
-      const response = await fetch('/api/login', { // <-- BU SATIRI GÜNCELLE
+      // Bu kısım Vite proxy ayarı sayesinde çalışacaktır.
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,7 +31,9 @@
 
       console.log('Giriş Başarılı:', data);
       localStorage.setItem('token', data.token);
-      navigate('/girne');
+      
+      // Giriş başarılı olunca /girne (admin anasayfasına) yönlendir
+      navigate('/girne'); 
 
     } catch (err) {
       setError(err.message);
@@ -31,4 +41,55 @@
     }
   };
 
-// ... (dosyanın alt kısmı aynı)
+  return (
+    <Container component="main" maxWidth="xs">
+      <Paper elevation={3} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography component="h1" variant="h5">
+          Admin Girişi
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="E-posta Adresi"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Şifre"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && (
+            <Typography color="error" variant="body2" align="center" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Giriş Yap
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
+  );
+}
+
+// EN ÖNEMLİ KISIM: Bu satır bileşeni dışa aktarır.
+export default LoginPage;

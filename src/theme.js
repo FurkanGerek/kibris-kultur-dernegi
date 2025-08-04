@@ -4,18 +4,18 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#C81432', // Kıbrıs bayrağı kırmızısı
+      main: '#C81432', // Kıbrıs bayrağı kırmızısı (ANA RENK)
     },
     secondary: {
       main: '#E76F51', // Vurgu ve butonlar için sıcak bir turuncu/kiremit
     },
     background: {
-      default: '#F5F5F5', // Çok hafif kırık beyaz bir arka plan
-      paper: '#FFFFFF',    // Kartlar ve diğer yüzeyler için saf beyaz
+      default: '#F5F5F5', 
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#1B263B', // Ana metinler için koyu gri
-      secondary: '#415A77', // İkincil, daha az önemli metinler için
+      primary: '#1B263B',
+      secondary: '#415A77',
     },
   },
   typography: {
