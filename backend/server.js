@@ -115,4 +115,4 @@ AppDataSource.initialize()
         });
     })
     .catch((error) => console.log("Veritabanı bağlantı hatası:", error));
-    .catch((error) => console.log("Veritabanı bağlantı hatası:", error));
+    
