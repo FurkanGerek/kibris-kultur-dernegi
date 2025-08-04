@@ -1,54 +1,34 @@
-import React from 'react';
-import { Container, Box, TextField, Button, Typography } from '@mui/material';
+// ... (dosyanın üst kısmı aynı)
 
-function LoginPage() {
-  return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Girne Panel Girişi
-        </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="E-posta Adresi"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Şifre"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Giriş Yap
-          </Button>
-        </Box>
-      </Box>
-    </Container>
-  );
-}
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
 
-// En önemli kısım: Bu satır, bileşeni dışa aktararak main.jsx'in onu bulmasını sağlar.
-export default LoginPage;
+    try {
+      // DEĞİŞİKLİK BURADA: 'http://localhost:3001' kısmını siliyoruz.
+      // Sadece '/api/login' yazarak, isteğin kendi bulunduğu domain'e gitmesini sağlıyoruz.
+      const response = await fetch('/api/login', { // <-- BU SATIRI GÜNCELLE
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Bir hata oluştu.');
+      }
+
+      console.log('Giriş Başarılı:', data);
+      localStorage.setItem('token', data.token);
+      navigate('/girne');
+
+    } catch (err) {
+      setError(err.message);
+      console.error('Giriş hatası:', err);
+    }
+  };
+
+// ... (dosyanın alt kısmı aynı)
