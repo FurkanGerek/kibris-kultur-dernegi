@@ -3,6 +3,7 @@ import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, AppBar, CssBaseline } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from '@mui/icons-material/Article';
+import PeopleIcon from '@mui/icons-material/People';
 
 const drawerWidth = 260; // Menüyü biraz genişlettim
 
@@ -40,12 +41,22 @@ function AdminLayout() {
                 <ListItemText primary="Anasayfa" />
               </ListItemButton>
             </ListItem>
+            {/* Yazar Yönetimi Menü Linki */}
+            <ListItem disablePadding>
+              <ListItemButton component={RouterLink} to="/girne/yazarlar">
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Yazar Yönetimi" />
+              </ListItemButton>
+            </ListItem>
+            {/* Makale Yönetimi Menü Linki */}
             <ListItem disablePadding>
               <ListItemButton component={RouterLink} to="/girne/makaleler">
                 <ListItemIcon>
                   <ArticleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Makaleler" />
+                <ListItemText primary="Makale Yönetimi" />
               </ListItemButton>
             </ListItem>
           </List>

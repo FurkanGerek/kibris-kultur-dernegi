@@ -4,12 +4,10 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      // Daha tok bir kırmızı tonu seçildi
-      main: '#D32F2F', 
+      main: '#C62828', // Göz yormayan, daha koyu ve profesyonel bir kırmızı tonu
     },
     secondary: {
-      // Uyumlu olması için ikincil renk de güncellendi
-      main: '#c62828', 
+      main: '#D32F2F', // İkincil renk olarak biraz daha canlı bir ton
     },
     background: {
       default: '#F5F5F5',

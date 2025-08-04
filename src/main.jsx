@@ -18,7 +18,8 @@ import PlaceholderPage from './pages/PlaceholderPage.jsx';
 import AdminLayout from './admin/AdminLayout.jsx';
 import AdminDashboard from './admin/pages/AdminDashboard.jsx';
 import LoginPage from './admin/pages/LoginPage.jsx';
-import ArticleList from './admin/pages/ArticleList.jsx';
+import MakaleYonetimi from './admin/pages/MakaleYonetimi.jsx';
+import YazarYonetimi from './admin/pages/YazarYonetimi.jsx';
 
 import './index.css';
 
@@ -40,7 +41,8 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <AdminDashboard /> },
-      { path: "makaleler", element: <ArticleList /> },
+      { path: "makaleler", element: <MakaleYonetimi /> },
+      { path: "yazarlar", element: <YazarYonetimi /> },
     ]
   },
   {
