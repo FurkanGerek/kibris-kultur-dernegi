@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../../photos/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Container, Box, TextField, Button, Typography, Paper } from '@mui/material';
 
@@ -44,8 +45,18 @@ function LoginPage() {
   return (
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* LOGO EKLENDİ */}
+        <Box
+          component="img"
+          sx={{
+            height: 60,
+            mb: 2,
+          }}
+          alt="Logo"
+          src={logo}
+        />
         <Typography component="h1" variant="h5">
-          Admin Girişi
+          Yönetim Paneli Girişi
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField

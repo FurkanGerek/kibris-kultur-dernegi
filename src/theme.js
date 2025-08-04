@@ -1,16 +1,18 @@
 import { createTheme } from '@mui/material/styles';
 
-// Aposto'dan ilham alan renk paleti
+// Renk paleti güncellendi
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#C81432', // Kıbrıs bayrağı kırmızısı (ANA RENK)
+      // Daha tok bir kırmızı tonu seçildi
+      main: '#D32F2F', 
     },
     secondary: {
-      main: '#E76F51', // Vurgu ve butonlar için sıcak bir turuncu/kiremit
+      // Uyumlu olması için ikincil renk de güncellendi
+      main: '#c62828', 
     },
     background: {
-      default: '#F5F5F5', 
+      default: '#F5F5F5',
       paper: '#FFFFFF',
     },
     text: {
@@ -28,6 +30,14 @@ const theme = createTheme({
     h6: { fontWeight: 600, color: '#415A77' },
   },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        // Admin panelindeki üst barın rengini de temadan almasını sağlıyoruz
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.primary.main,
+        }),
+      }
+    },
     MuiCard: {
       styleOverrides: {
         root: {
